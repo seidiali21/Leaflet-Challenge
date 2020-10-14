@@ -122,6 +122,15 @@ function createMap(earthquakes) {
    accessToken: API_KEY
  })
 
+ // Create our map, giving it the streetmap and earthquakes layers to display on load
+ var myMap = L.map("mapid", {
+  center: [
+    37.09, -95.71
+  ],
+  zoom: 5,
+  layers: [satellite, earthquakes]
+});
+
   // Define a baseMaps object to hold our base layers
   var baseMaps = {
     "Light Map": light,
@@ -135,16 +144,7 @@ function createMap(earthquakes) {
     Earthquakes: earthquakes,
   };
 
-  // Create our map, giving it the streetmap and earthquakes layers to display on load
-  var myMap = L.map("map", {
-    center: [
-      37.09, -95.71
-    ],
-    zoom: 5,
-    layers: [satellite, earthquakes]
-  });
-
-  // Create a layer control
+ // Create a layer control
   // Pass in our baseMaps and overlayMaps
   // Add the layer control to the map
   L.control.layers(baseMaps, overlayMaps, {
