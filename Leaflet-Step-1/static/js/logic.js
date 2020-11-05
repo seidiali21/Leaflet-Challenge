@@ -1,109 +1,113 @@
-// create the base map
-var myMap = L.map("map",{
-    center : [37.09, -95.71],
-    zoom : 8
+// Create a initial map object
+var myMap = L.map('map',{
+    center:[37.0902, -95.7129],
+    zoom: 5
+})
 
-});
-
-//add the light layer tile
-
-L.tileLayer("https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}", {
-attribution: "Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>",
-maxZoom: 18,
-id: "mapbox.light",
-accessToken: API_KEY
+// Add a tile layer
+L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
+    attribution: "© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> <strong><a href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong>",
+    tileSize: 512,
+    maxZoom: 18,
+    zoomOffset: -1,
+    id: "mapbox/light-v10",
+    accessToken: API_KEY
 }).addTo(myMap);
 
-// get the url for the earthquake data
-var queryUrl = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2019-01-01&endtime=" +
-"2019-01-02&maxlongitude=170.52148437&minlongitude=-150.83789062&maxlatitude=80.74894534&minlatitude=-85.16517337";
 
-// create a function that changes marker size depending on the magnitute values
-function markerSize(mag){
-    return mag * 5
+// Function to determine circle color based on the magnitude 
+function getColor(magnitude){
+    switch(true){
+        case (magnitude <= 1):
+            return '#ccff66';
+            break;
+        case (magnitude <= 2):
+            return '#ffff66';
+            break;
+        case (magnitude <= 3):
+            return '#ff9933';
+            break;
+        case (magnitude <= 4):
+            return '#ff5050';
+            break;
+        case (magnitude <= 5):
+            return '#ff0066';
+            break;
+        case (magnitude > 5):
+            return '#990099';
+            break;
+        default:
+            return '#cccccc';
+            break;
+    }
 }
 
-// create a function that gets colors for circle markers
-function getColors(d) {
-    if (d < 1){
-      return "#B7DF5F"
+// Function to determine circle radius based on the magnitude 
+function getRadius(magnitude){
+    switch(true){
+        case (magnitude <= 1):
+            return 5;
+            break;
+        case (magnitude <= 2):
+            return 7;
+            break;
+        case (magnitude <= 3):
+            return 9;
+            break;
+        case (magnitude <= 4):
+            return 11;
+            break;
+        case (magnitude <= 5):
+            return 13;
+            break;
+        case (magnitude > 5):
+            return 15;
+            break;
+        default:
+            return 1;
+            break;
     }
-    else if ( d < 2){
-      return "#DCED11"
-    }
-    else if (d < 3){
-      return "#EDD911"
-    }
-    else if (d < 4){
-      return "#EDB411"
-    }
-    else if (d < 5 ){
-      return "#ED7211"
-    }
-    else {
-      return "#ED4311"
-    }
-  };
-  
-// create a function that creates markers
-function createCircleMarker(feature, latlng ){
+}  
 
-    // Change the values of these options to change the symbol's appearance
-      var markerOptions = {
-        radius: markerSize(feature.properties.mag),
-        fillColor: getColors(feature.properties.mag),
-        color: "black",
-        weight: 1,
-        opacity: 1,
-        fillOpacity: 0.8
-    }
+var GeoJSONUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson"
 
-    return L.circleMarker( latlng, markerOptions );
+d3.json(GeoJSONUrl).then(function(data){
 
-}
-
-
-// Use json request to fetch the data from a URL
-d3.json(queryUrl, function(data) {
-
-    console.log(data)
-  
-    var earthquakes = data.features
-  
-    console.log(earthquakes)
+    L.geoJson(data,{
+        pointToLayer: function (feature, latlng) {
+            // Create a circle marker
+            return L.circleMarker(latlng, {
+                radius: getRadius(feature.properties.mag), // different radius for different magnitude
+                fillColor: getColor(feature.properties.mag), // different circle colors for different magnitude
+                color: "#000",
+                weight: 1,
+                opacity: 1,
+                fillOpacity: 0.8
+            });
+        },
+        onEachFeature: function(feature, layer){
+            layer.bindPopup(`<h3>${feature.properties.place}</h3><hr><span>Magnitude: ${feature.properties.mag}</span>`)
+        }
+    }).addTo(myMap);
     
-    // loop through the data to create markers and popup
-    earthquakes.forEach(function(result){
-      //console.log(result.properties)
-      L.geoJSON(result,{
-        pointToLayer: createCircleMarker
-        // add popups to the circle markers to display data
-      }).bindPopup("Date: " + new Date(result.properties.time) + "<br>Place: " + result.properties.place + "<br>Magnitude: " + result.properties.mag).addTo(myMap)
-    });
+    // Create a legend
+    var legend = L.control({position: 'bottomright'});
+    legend.onAdd = function (map) {
 
-     //create legennds and add to the map
-  var legend = L.control({position: "bottomright" });
-  legend.onAdd = function(){
-    // create div for the legend
-    var div = L.DomUtil.create('div', 'info legend'),
-        grades = [0, 1, 2, 3, 4, 5]
-        labels = [];
-
-    // loop through our density intervals and generate a label with a colored square for each interval
-    for (var i = 0; i < grades.length; i++) {
-        div.innerHTML +=
-            '<i style="background:' + getColors(grades[i]) + '"></i> ' +
-            grades[i] + (grades[i +1 ] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
-    }
-    return div;
-  };
-  
-  legend.addTo(myMap);
-
+        var div = L.DomUtil.create('div', 'info legend'),
+            mag = [0, 1, 2, 3, 4, 5]
+        
+        div.innerHTML += "<h4>Magnitude Level</h4><hr>"
+        // loop through our density intervals and generate a label with a colored square for each interval
+        for (var i = 0; i < mag.length; i++) {
+            div.innerHTML +=
+                '<i style="background:' + getColor(mag[i] + 1) + '"></i> ' +
+                mag[i] + (mag[i + 1] ? '&ndash;' + mag[i + 1] + '<br>' : '+');
+        }
+        return div;
+    };
+    legend.addTo(myMap);
+    
+    // Legend source1: https://leafletjs.com/examples/choropleth/
+    // Legend source2: https://codepen.io/haakseth/pen/KQbjdO
 });
-
-
-
-
-
-

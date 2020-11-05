@@ -1,78 +1,50 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Earthquake Maps</title>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <meta charset="utf-8">
+  <title>Earthquake Data</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/superhero/bootstrap.min.css">
+  <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+  
+  
+  
 </head>
 
 <body>
-    <!-- create a cotainer -->
-    <div class="container">
-        <!-- create the first row for the header -->
-        <div class="row">
-            <div class="col-md-12 jumbotron text-center">
-                <h1>Earthquake Maps</h1>
-                <h1><a href=" "><img src = "Images/1-Logo.png" width = "75%", hight = "75%"></a> </h1>
-            </div>
-        </div>
-        <!-- create second row for the info -->
-        <div class="row">    
-            <div class="col-md-4">
-                <h3>About Earthquake</h3>
-                <p>The USGS provides earthquake data in a number of different formats, updated every 5 minutes. Using the data available on <a href="http://earthquake.usgs.gov/earthquakes/feed/v1.0/geojson.php">www.earthquake.usgs.gov</a> created maps using Leaflet that plots all of the earthquakes from the data set based on their longitude and latitude.
-                
-                <p>The data markers reflect the magnitude of the earthquake in their size and color. Earthquakes with higher magnitudes should appear larger and darker in color.</p>
 
-                <p>Popups provide additional information about the earthquake when a marker is clicked and the legend provides context for the data.</p>
-            </div>
-            <div class="col-md-8">
-                <a href="Leaflet-Step-2/index.html">
-                    <img  src="Images/5-Advanced.png" width="100%">     
-                </a> 
-                <p class="info">Layer map has different layer options such as outdoors, satellite, grayscale and light map</p> 
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6">
-                <img src = "Images/2-BasicMap.png"  width="100%" > 
-            </div>
-            <div class="col-md-6">
-                <img src = "Images/3-Data.png"  width="100%" > 
-            </div>
-            <div class = "col-md-6">
-                <img src = "Images/4-Json.pnd" width = "100%">
-            </div>
-
-            <div class "col-md-6">
-                <img src = "Images/5-Advanced.png" width = "100%">
-            </div>
-
-            <div class "col-md-6">
-                <img src = "Images/6-Time_keeps_On_Ticking.gif" width = "100%">
-            </div>
+<div style="text-align: center">
+<h2 style=font-size:90px; > 
+Earthquake Data Visualization
+</h2>
+</div>
 
 
-            
-        </div>
-    
-    <hr>
-        <!-- third row for the maps -->
-        <div class="row">
-            <div class="col-md-6">
-                <a href="Clusters/index.html"><img  src="Images/cluster.png" width="90%"></a>
-                <p class="info">Cluster map shows the number of earthquakes in each cluster and as we zoom it adjusts the clusters based on the currret view. </p>     
-            </div>
-            <div class="col-md-6">
-                <a href="Heatmap/index.html"><img src="Images/heat.png" width="100%"></a>
-                <p>Heatmap highlights areas of earthquake activity.</p>   
-                
-            </div>    
-        </div>
-  
-    </div>
+<div style="text-align: center">
+<img src="earthquake.jpg" width='1066' height='448' alt='' align="center">
+<img src="6-Time_Keeps_On_Ticking.gif" width='1066' height='448' alt='' align="center">
+
+<!-- <img src="https://github.com/deobandana/Leaflet-Challenge/blob/main/Image/earthquake.jpg" width='1066' height='448' alt='' align="center">
+ -->
+</div>
+
+
+
+
+  <h1 style=font-size:40px; > 
+  <p style="text-align:center;">
+	<a href=" Leaflet-Step-1\index.html">Level 1: Basic Visualization (Click Here)<br></a>
+	
+	<a href=" Leaflet-Step-2\index.html">Level 2: More Data (Click Here)</a>
+	
+  </p>
+  </h1>
+ 
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.11.0/d3.js"></script>
+  <script src="static/js/data.js"></script>
+  <script src="static/js/app.js"></script>
 </body>
+
 </html>
